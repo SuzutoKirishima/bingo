@@ -1,1 +1,1 @@
-# bingo.html
+# bingo.
