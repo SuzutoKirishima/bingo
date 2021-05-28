@@ -8,8 +8,9 @@
     <link rel="stylesheet" type="text/css" href="bingo.css">
     <title>Final</title>
     <script>
+        //ビンゴのランダム生成
         const createBingo = (user) => {
-            let num = Array.from(Array(75).keys(), x => x+1);
+            let num = Array.from(Array(75).keys(), x => x + 1);
             for (let i = 0; i < 5; i++) {
                 let table = document.getElementById(user);
                 let row = document.createElement("tr");
@@ -30,6 +31,66 @@
                 }
             }
         }
+
+        //カードに書かれている数字を取得
+        const cardInfo = (name) => {
+            let card = [];
+            let user = document.getElementById(name);
+            let td = user.getElementsByTagName("td");
+
+            //列の取得
+            for (let i = 0; i < 5; i++) {
+                let columns = [];
+                for (let j = 0; j < 25; j++) {
+                    if (j % 5 == i) {
+                        let num = td[j].innerHTML;
+                        if (num == "free") {
+                            num = 0;
+                        }
+                        columns.push(parseInt(num));
+                    }
+                }
+                card.push(columns);
+            }
+
+            //行の取得
+            let rows = [];
+            for (let i = 0; i < 25; i++) {
+                let num = td[i].innerHTML;
+                if (rows.length < 5) {
+                    if (num == "free") {
+                        num = 0;
+                    }
+                    rows.push(parseInt(num));
+                }
+                if (rows.length == 5) {
+                    card.push(rows);
+                    rows = [];
+                }
+            }
+
+            //斜めの取得
+            let cross = [];
+            for (let j of [6, 4]) {
+                for (let i = 0; i < 25; i++) {
+                    if (i % j == 0) {
+                        let num = td[i].innerHTML;
+                        if (num == "free") {
+                            num = 0;
+                        }
+                        if (j == 6) {
+                            cross.push(parseInt(num));
+                        } else {
+                            if (i != 0 && i != 24) {
+                                cross.push(parseInt(num));
+                            }
+                        }
+                    }
+                }
+                card.push(cross);
+                cross = [];
+            }
+        }
     </script>
 </head>
 
@@ -37,7 +98,7 @@
     <h1 id="title">Bingo Game</h1>
     <div>
         <div id="number_brock">
-            <p id="middle-title">次は</p>
+            <p id="middle-title">Next</p>
             <p id="number"></p>
         </div>
 
@@ -49,24 +110,16 @@
         </div>
 
         <div id="button_block">
-            <button id="start_stop">スタート</button>
+            <a href="#" id="start">START</a>
         </div>
     </div>
 
     <div id="card">
         <p id="player">YOU</p>
-        <table id="you" border="1">
+        <table id="you">
             <script>
                 createBingo("you");
-                let card = [];
-                let td = document.getElementsByTagName("td");
-                for (let i=0; i<25; i++) {
-                    for (let j=0; j<5; j++) {
-                        
-                        separate.push(td[i].innerHTML);
-                    }
-                }
-                console.log(card);
+                cardInfo("you");
             </script>
         </table>
     </div>
@@ -76,6 +129,7 @@
         <table id="com1" border="1">
             <script>
                 createBingo("com1");
+                cardInfo("com1");
             </script>
         </table>
     </div>
@@ -85,15 +139,16 @@
         <table id="com2" border="1">
             <script>
                 createBingo("com2");
+                cardInfo("com2");
             </script>
         </table>
     </div>
 
 
     <script>
-        let last = Array.from(Array(75).keys(), x => x+1);
+        let last = Array.from(Array(75).keys(), x => x + 1);
         let results = []
-        let button = document.getElementById("start_stop");
+        let button = document.getElementById("start");
         // 数字を引く
         const randnum = () => {
             let random = Math.floor(Math.random() * last.length);
@@ -102,30 +157,34 @@
         }
 
         // スタート・ストップ
-        console.log(last.length);
         const start_stop = () => {
-            let message = ["スタート", "ストップ"];
-            if (button.innerHTML == message[0]) {
-                button.innerHTML = message[1];
-                shuffle = setInterval(randnum, 10);
-            } else {
-                button.innerHTML = message[0];
-                clearInterval(shuffle);
-                let rowNum = document.getElementById("number").innerHTML;
-                num = ("00" + rowNum).slice(-2);
-                let result = document.getElementById("result");
-                let newResults = document.createElement("p");
-                result.appendChild(newResults);
-                newResults.innerHTML = num;
-                last = last.filter(x => x != rowNum);
-                results.push(num);
-                let td = document.getElementsByTagName("td");
-                // console.log(td);
-                for (let i = 0; i < td.length; i++) {
-                    if (td[i].innerHTML == rowNum) {
-                        td[i].setAttribute("id", "hit");
+            if (last.lengh!=0) {
+                let message = ["START", "STOP"];
+                if (button.innerHTML == message[0]) {
+                    button.innerHTML = message[1];
+                    button.setAttribute("id", "stop");
+                    shuffle = setInterval(randnum, 10);
+                } else {
+                    button.innerHTML = message[0];
+                    button.setAttribute("id", "start");
+                    clearInterval(shuffle);
+                    let rowNum = document.getElementById("number").innerHTML;
+                    num = ("00" + rowNum).slice(-2);
+                    let result = document.getElementById("result");
+                    let newResults = document.createElement("p");
+                    result.appendChild(newResults);
+                    newResults.innerHTML = num;
+                    last = last.filter(x => x != rowNum);
+                    results.push(num);
+                    let td = document.getElementsByTagName("td");
+                    for (let i = 0; i < td.length; i++) {
+                        if (td[i].innerHTML == rowNum) {
+                            td[i].setAttribute("id", "hit");
+                        }
                     }
                 }
+            } else {
+                console.log("end");
             }
         }
 
