@@ -11,7 +11,6 @@
 }
 
 #middle-title {
-    /* float: center; */
     width: 50%;
     font-weight: bold;
     background-color: #FFF;
@@ -46,14 +45,41 @@
 }
 
 #button_block {
-    padding: 20px;
+    padding: 20px 0px;
 }
 
-#button_block input{
+#start {
+    display: block;
+    text-decoration: none;
     text-align: center;
     width: 30%;
-    height: 50px;
+    background-color: rgb(73, 148, 83);
+    border-bottom: 5px solid rgb(0, 68, 9);
+    color: #FFF;
     font-size: 20px;
+    border-radius: 5px;
+}
+
+#start:hover {
+    padding-top: 3px;
+    border-bottom: 2px solid rgb(0, 68, 9);
+}
+
+#stop {
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    width: 30%;
+    background-color: rgb(168, 31, 31);
+    border-bottom: 5px solid rgb(68, 0, 0);
+    color: #FFF;
+    font-size: 20px;
+    border-radius: 5px;
+}
+
+#stop:hover {
+    padding-top: 3px;
+    border-bottom: 2px solid rgb(68, 0, 0);
 }
 
 #card {
@@ -63,10 +89,20 @@
     padding: 10px;
 }
 
-#card table {
+#card table{
     text-align: center;
+    width: 300px;
+    height: 300px;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+#card tr,td {
+    border: solid 3px rgb(110, 75, 0);
 }
 
 #hit {
-    background-color: #FF0;
+    color: #a36200;
+    background-color: #ffdba1;
+    font-weight: bold;
 }
